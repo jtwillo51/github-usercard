@@ -2,6 +2,26 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
+axios.get('https://api.github.com/users/jtwillo51')
+  .then((response) => {
+
+    cardPlace.appendChild(makeCard(response.data))
+
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+
+axios.get("https://api.github.com/users/jtwillo51/followers")
+  .then((response) => {
+    setTimeout(
+    response.data.forEach(user=>{
+      cardPlace.appendChild(makeCard(user));
+    }),1000)
+  })
+  .catch((err) => {
+    console.log(err);
+  })
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
@@ -24,7 +44,7 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["tetondan", "dustinmyers", "justsml", "luishrd", "bigknell"];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -45,8 +65,54 @@ const followersArray = [];
 </div>
 
 */
+function makeCard(obj) {
+  let card = document.createElement('div');
+  card.classList.add('card');
 
-/* List of LS Instructors Github username's: 
+  let cardInfo = document.createElement('div');
+  cardInfo.classList.add('card-info');
+  card.appendChild(cardInfo);
+
+  let name = document.createElement('h3');
+  name.classList.add('name');
+  name.textContent = obj.name;
+
+  let username = document.createElement('p');
+  username.classList.add('username');
+  username.textContent = obj.login;
+
+  let location = document.createElement('p');
+  location.textContent = `Location: ${obj.location}`;
+
+  let profile = document.createElement('p');
+  let profileAnchor = document.createElement('a');
+  profile.appendChild(profileAnchor);
+  profileAnchor.textContent = obj.html_url;
+  profileAnchor.setAttribute("href", `${obj.html_url}`)
+
+
+  let followers = document.createElement('p');
+  followers.textContent = `Followers: ${obj.followers}`;
+  let following = document.createElement('p');
+  following.textContent = `Following: ${obj.following}`;
+
+  let bio = document.createElement('p');
+  bio.textContent = `Bio: ${obj.bio}`;
+
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(username);
+  cardInfo.appendChild(location)
+  cardInfo.appendChild(profile)
+  cardInfo.appendChild(followers)
+  cardInfo.appendChild(following)
+  cardInfo.appendChild(bio)
+
+  return card;
+}
+
+const cardPlace = document.querySelector('.cards');
+
+/* List of LS Instructors Github username's:
   tetondan
   dustinmyers
   justsml
